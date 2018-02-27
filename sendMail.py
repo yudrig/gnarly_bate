@@ -2,7 +2,7 @@
 
 import smtplib
 import sys
-import pytracking
+
 
 #This sends SMTP mail via command line arguments.
 #args: senderName, senderAddress, recieverName, receiverAddress, subject, message
@@ -21,3 +21,5 @@ try:
 	sys.exit(0)
 except smtplib.SMTPException:
 	sys.exit(1)
+#import pytracking
+#(pixel_byte_string, mime_type) = pytracking.get_open_tracking_pixel()
