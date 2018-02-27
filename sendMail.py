@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import getpass
 import smtplib
 import sys
 
@@ -14,8 +15,9 @@ Subject: %s
 print message
 
 try:
+	#TODO: Send mail from arbitrary server
 	smtpObj = smtplib.SMTP('localhost')
-	smtpObj.sendmail(sys.argv[2],sys.argv[4],message)
+	smtpObj.sendmail(getpass.getuser()+'@adelphi.edu',sys.argv[4],message)
 	sys.exit(0)
 except smtplib.SMTPException:
 	sys.exit(1)
