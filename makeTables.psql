@@ -1,0 +1,34 @@
+START TRANSACTION;
+
+CREATE TABLE users(
+	id serial PRIMARY KEY,
+	firstname text,
+	lastname text,
+	score int
+);
+
+CREATE TABLE templates(
+	id serial PRIMARY KEY,
+	subject text,
+	body text,
+	difficulty int
+);
+
+CREATE TABLE outcomes(
+	person int REFERENCES users(id),
+	template int REFERENCES templates(id),
+	opened int,
+	failed int,
+	PRIMARY KEY(person,template)
+);
+
+CREATE TABLE incoming(
+	person int REFERENCES users(id),
+	template int REFERENCES templates(id),
+	time timestamp,
+	opened boolean,
+	clicked boolean,
+	PRIMARY KEY(person,template)
+);
+
+COMMIT TRANSACTION;
