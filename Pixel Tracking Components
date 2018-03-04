@@ -1,0 +1,13 @@
+#!/usr/bin/python
+
+#https://en.ryte.com/wiki/Tracking_Pixel
+This line of code should go into the header of the email
+
+<img scr = "compsci.adelphi.edu/~thomasrhatigan" style=“position:absolute; visibility:hidden”>
+
+https://discourse.snowplowanalytics.com/t/tracking-email-events-sends-opens-and-clicks-with-snowplow-tutorial/436
+This is from the other website example
+<img src="://my.collector.url/i?e=se&p=web&tv=no-js-0.1.0&se_ca=email&se_ac=open&se_la={{email_id}}&se_pr={{recipient_id}}">
+
+#parsing of the Apache server log for the proof that the pixel was viewed 
+https://gist.github.com/sumeetpareek/9644255
