@@ -3,7 +3,13 @@
 #https://en.ryte.com/wiki/Tracking_Pixel
 This line of code should go into the header of the email
 
-<img scr = "compsci.adelphi.edu/~thomasrhatigan" style=“position:absolute; visibility:hidden”>
+<img scr = "compsci.adelphi.edu/~thomasrhatigan/pix.png" style="position:absolute; visibility:hidden">
+    
+<img src="compsci.adelphi.edu/~thomasrhatigan/pix.png" style="display:none">
+
+<img src="compsci.adelphi.edu/~thomasrhatigan/pix.png" width="0" height="0">   
+
+
 
 https://discourse.snowplowanalytics.com/t/tracking-email-events-sends-opens-and-clicks-with-snowplow-tutorial/436
 This is from the other website example
