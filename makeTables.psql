@@ -1,6 +1,6 @@
 START TRANSACTION;
 
-CREATE TABLE users(
+CREATE TABLE userList(
 	id serial PRIMARY KEY,
 	firstname text,
 	lastname text,
@@ -15,7 +15,7 @@ CREATE TABLE templates(
 );
 
 CREATE TABLE outcomes(
-	person int REFERENCES users(id),
+	person int REFERENCES userList(id),
 	template int REFERENCES templates(id),
 	opened int,
 	failed int,
@@ -23,7 +23,7 @@ CREATE TABLE outcomes(
 );
 
 CREATE TABLE incoming(
-	person int REFERENCES users(id),
+	person int REFERENCES userList(id),
 	template int REFERENCES templates(id),
 	time timestamp,
 	opened boolean,
