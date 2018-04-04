@@ -17,7 +17,7 @@ def sendViaDatabase(queryType,query,senderName,senderAddress,subject,message):
     #TODO: This query shit is driving me crazy. The query needs to recognize the 'query' parameter as a string, not a column. Input also needs to be scrubbed (; DROP TABLE userlist)
 
     #users =  cur.execute("SELECT * FROM userlist " +  query + ";")
-    queryStart = 'SELECT * FROM userlist WHERE ' + queryType
+    queryStart = 'SELECT * FROM userlist WHERE ' + queryType + ' ' + 
     cur.execute(queryStart + " = %s;", (query,))
     users = cur.fetchall()
 
@@ -29,6 +29,10 @@ def sendViaDatabase(queryType,query,senderName,senderAddress,subject,message):
         return 0
 
 def main():
+    queryType = input("""Enter 1 to match """)
+    query = input();
+    senderName = input('Full Name of Sender: ')
+    
     sendViaDatabase(sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5],sys.argv[6])
 
 if __name__ == '__main__': main()
