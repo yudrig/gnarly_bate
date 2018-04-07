@@ -44,8 +44,7 @@ def sendViaDatabase(queryType,condition,comparison,senderName,senderAddress,subj
     if users != None:
         for user in users:
             fullName = user[1] + ' ' + user[2]
-            print fullName
-           # sendMail.sendIt(fullName, user[4], senderName, senderAddress, subject, message)
+            sendMail.sendIt(fullName, user[4], senderName, senderAddress, subject, message)
     else:
         if __name__ == '__main__': print 'No results found'
         return 0
