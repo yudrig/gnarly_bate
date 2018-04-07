@@ -1,38 +1,102 @@
 #!usr/bin/python
 
-#Temporary fix (hopefully). Should be able to send via database using both no conditions and a query but python polymorphism is hard so this file will allow sending with query while sendToMany will send only with database
 import sys
 
-def sendViaDatabase(queryType,query,senderName,senderAddress,subject,message):
+def sendViaDatabase(queryType,condition,comparison,senderName,senderAddress,subject,message):
     import psycopg2
     import sendMail
-
+    
+    #Connecting to database
     try:
         conn = psycopg2.connect("dbname = 'groupg' user = 'kevinwoll'")
     except:
-        print "Unable to connect to DB!"
-        return 0
+        #Only print error if run as main, alway return -1 on failure
+        if __name__ == '__main__': print "Unable to connect to DB!"
+        return -1
     cur = conn.cursor()
-    
-    #TODO: This query shit is driving me crazy. The query needs to recognize the 'query' parameter as a string, not a column. Input also needs to be scrubbed (; DROP TABLE userlist)
 
-    #users =  cur.execute("SELECT * FROM userlist " +  query + ";")
-    queryStart = 'SELECT * FROM userlist WHERE ' + queryType + ' ' + 
-    cur.execute(queryStart + " = %s;", (query,))
+    #Dictionary of columns to parameterize queries
+    #TODO: Make this a little more elegant
+    column_dictionary = {1:'SELECT * FROM userlist WHERE ID ',2:'SELECT * FROM userlist WHERE firstname',3:'SELECT * FROM userlist WHERE lastname',4:'SELECT * FROM userlist WHERE score',5:'SELECT * FROM userlist WHERE email', 6:'SELECT * FROM userlist'}
+    #Dictionary of comparisons
+    comparison_dictionary = {1:'>', 2:'>=', 3:'=', 4:'<=', 5:'<', 6:'!='}
+
+    #Building query from dictionary and parameters
+    if queryType == 6:
+        query = column_dictionary.get(queryType)
+    else:
+        try:
+            query = column_dictionary.get(queryType) + comparison_dictionary.get(comparison)
+        #If get() returns None, end in error. Putting this here simplifies error catching to one stage rather than the four that would be necessary if it were done preemptively
+        except TypeError:
+            if __name__ == '__main__':
+                print 'ERROR: Out of range'
+                return -1
+
+    #Executing query
+    if condition == None:
+        cur.execute(query)
+    else:
+        cur.execute(query + ' %s',(condition,))
     users = cur.fetchall()
 
+    #If results are found, iterate through them
     if users != None:
         for user in users:
             fullName = user[1] + ' ' + user[2]
-            sendMail.sendIt(fullName, user[4], senderName, senderAddress, subject, message)
+            print fullName
+           # sendMail.sendIt(fullName, user[4], senderName, senderAddress, subject, message)
     else:
+        if __name__ == '__main__': print 'No results found'
         return 0
 
+#Main method if run alone
+#Gathers inputs manually
 def main():
-    queryType = input("""Enter 1 to match """)
-    query = input();
-    senderName = input('Full Name of Sender: ')
+    queryType = raw_input("""Select category:
+1 to search ID
+2 to search first name
+3 to search last name
+4 to search score
+5 to search email address
+6 to send without category 
+""")
+    try:
+        queryType = int(queryType)
+    except ValueError:
+        print 'ERROR: Invalid input'
+        return -1
+
+    #If searching an int field, change input to int and get comparison
+    comparison = 3
+    condition = None
+    if queryType != 6:
+        condition = raw_input("Condition: ")
+        if queryType == 1 or queryType == 4:
+            try:
+                condtiion = int(condition)
+            except ValueError:
+                print 'ERROR: Invalid input ' + query
+                return -1
+
+            comparison = raw_input("""Select comparison type:
+1:>
+2:>=
+3:=
+4:<=
+5:<
+6:!=
+""")
+            try:
+                comparison = int(comparison) 
+            except ValueError:
+                print 'ERROR: Invalid input'
+
+    senderName = raw_input('Full Name of Sender: ')
+    senderAddress = raw_input('Sender Address: ')
+    subject = raw_input('Subject: ')
+    message = raw_input('Email body: ')
     
-    sendViaDatabase(sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5],sys.argv[6])
+    sendViaDatabase(queryType,condition,comparison,senderName,senderAddress,subject,message)
 
 if __name__ == '__main__': main()
