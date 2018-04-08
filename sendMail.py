@@ -1,12 +1,13 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 #This sends SMTP mail via command line arguments.
 #args: receiverName, receiverAddress, senderName, senderAddress, subject, message
 
+import sys
+
 def sendIt(receiverName, receiverAddress, senderName, senderAddress, subject, message):
     import getpass
     import smtplib
-    import sys
     message = """From: %s <%s>
 To: %s <%s>
 Subject: %s
@@ -28,7 +29,6 @@ Subject: %s
 def sendMany(recipients, recipientAddresses, senderName, senderAddress, subject, message):
     import getpass
     import smtplib
-    import sys
     i = 0
     for receiver in recipients:
         sendIt(receiver, recipientAddresses[i], senderName, senderAddresssubject, message)
