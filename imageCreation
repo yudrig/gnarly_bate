@@ -1,0 +1,20 @@
+#!/usr/bin/python2
+import sys
+from PIL import Image
+def imageCreation(userID, EmailID):
+#pass in the ids will not be searching for them creating images
+#parameters user id and emial ids as tuprles
+# opens the image pixel.png
+        im1 = Image.open("pixel.png")
+        print(im1.format, im1.size,im1.mode)
+#this needs append userID and EmailID
+        im2 = im1.copy()
+#Call the UserID and EmailID
+        Identification ="""pix_%s_%s.png"""%(userID, EmailID)
+        im2.save(Identification,format="png")
+        print(im2.format, im2.size, im2.mode)
+
+def main():
+        imageCreation(sys.argv[1],sys.argv[2])
+
+if __name__ == '__main__' : main()
