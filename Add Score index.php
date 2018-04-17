@@ -1,5 +1,6 @@
 <html>
 	<?php
+		//'www-data' needs SELECT, UPDATE, (INSERT?)
 		
 		//compsci.adelphi.edu/~jasonmassimino?mID=1&uID=10
 	
