@@ -27,11 +27,10 @@ Subject: %s
     #(pixel_byte_string, mime_type) = pytracking.get_open_tracking_pixel()
 
 def sendMany(recipients, recipientAddresses, senderName, senderAddress, subject, message):
-    import getpass
-    import smtplib
     i = 0
     for receiver in recipients:
-        sendIt(receiver, recipientAddresses[i], senderName, senderAddresssubject, message)
+        sendIt(receiver, recipientAddresses[i], senderName, senderAddress, subject, message)
+        i = i+1
 
 def main():
     sendIt(sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5],sys.argv[6])
