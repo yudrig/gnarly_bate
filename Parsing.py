@@ -4,6 +4,7 @@ when required arguments are missing = http://i.imgur.com/P5L0GZV.png
 when incorrect file path is passed = http://i.imgur.com/sJDc0om.png
 successful sample output = http://i.imgur.com/iH89mwI.png
 Found on github https://gist.github.com/sumeetpareek/9644255
+log input /var/log/apache2/access.log 
 """
 
 import re
