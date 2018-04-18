@@ -38,7 +38,7 @@ def searchUsers(queryType,condition,comparison):
         cur.execute(query)
     else:
         cur.execute(query + ' %s',(condition,))
-    users = cur.fetchall()
+    users = cur.fetchall()#When this is changed to fetchone()you will only grab the first value which is the ID in which we need
 
     if(__name__ == '__main__'):
         print users
