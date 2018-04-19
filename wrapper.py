@@ -4,5 +4,8 @@ import searchTemplates
 import imageCreation
 #searchUsers()
 #searchTemplates()
-imageCreation.imageCreation(searchTemplates.searchTemplates(1,101),searchUsers.searchUsers(1,1,3))
+x=1
+while x <= 12:
+        imageCreation.imageCreation(searchTemplates.searchTemplates(1,101),searchUsers.searchUsers(1,x,3))
+        x += 1
 
