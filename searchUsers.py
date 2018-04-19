@@ -9,8 +9,6 @@ def searchUsers(queryType,condition,comparison):
     try:
         conn = psycopg2.connect("dbname = 'groupg' user = 'kevinwoll'")
     except:
-        #Only print error if run as main, alway return -1 on failure
-        if __name__ == '__main__': print "Unable to connect to DB!"
         return -1
     cur = conn.cursor()
 
@@ -28,9 +26,7 @@ def searchUsers(queryType,condition,comparison):
             query = column_dictionary.get(queryType) + comparison_dictionary.get(comparison)
         #If get() returns None, end in error. Putting this here simplifies error catching to one stage rather than the four that would be necessary if it were done preemptively
         except TypeError:
-            if __name__ == '__main__':
-                print 'ERROR: Out of range'
-                return -1
+		    return -1
 
     #Executing query
     if condition == None:
