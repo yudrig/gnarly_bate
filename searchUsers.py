@@ -4,10 +4,11 @@ import sys
 
 def searchUsers(queryType,condition,comparison):
     import psycopg2
+    import getpass
     
     #Connecting to database
     try:
-        conn = psycopg2.connect("dbname = 'groupg' user = 'kevinwoll'")
+        conn = psycopg2.connect("dbname = 'groupg' user = '%s'" % getpass.getuser())
     except:
         return -1
     cur = conn.cursor()
@@ -37,6 +38,7 @@ def searchUsers(queryType,condition,comparison):
 
     if(__name__ == '__main__'):
         print users
+        return -1
     else:
         return users
 
