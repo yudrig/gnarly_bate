@@ -4,7 +4,6 @@ import sys
 
 def searchUsers(queryType,condition,comparison):
     import psycopg2
-    import sendMail
     
     #Connecting to database
     try:

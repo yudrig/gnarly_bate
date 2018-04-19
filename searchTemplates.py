@@ -4,7 +4,6 @@ import sys
 
 def searchTemplates(queryType,condition):
     import psycopg2
-    import sendMail
     
     #Connecting to database
     try:
