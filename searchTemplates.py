@@ -31,14 +31,11 @@ def searchTemplates(queryType,condition):
         cur.execute(query + ' %s',(condition,))
     template = cur.fetchall()
 
-    if(__name__ == '__main__'):
-        print template
-    else:
-        return template
+    return template
 
 #Main method if run alone
 #Gathers inputs manually
-def main():
+def gather_inputs():
     queryType = raw_input("""Select category:
 1 to search ID
 2 to search subject
@@ -53,6 +50,9 @@ def main():
     
     condition = raw_input("Condition: ")
 
-    searchTemplates(queryType,condition)
+    return searchTemplates(queryType,condition)
+
+def main():
+    print gather_inputs()
 
 if __name__ == '__main__': main()

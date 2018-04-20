@@ -6,14 +6,6 @@ def searchUsers(queryCategory,search_condition,operator):
     import psycopg2
     import getpass
     
-    print queryCategory
-    print search_condition
-    print operator
-
-    print type(queryCategory)
-    print type(search_condition)
-    print type(operator)
-    
     #Connecting to database
     try:
         conn = psycopg2.connect("dbname = 'groupg' user = '%s'" % getpass.getuser())
@@ -36,7 +28,6 @@ def searchUsers(queryCategory,search_condition,operator):
         #If get() returns None, end in error. Putting this here simplifies error catching to one stage rather than the four that would be necessary if it were done preemptively
         except TypeError:
 		    return -2
-        print query
 
     #Executing query
     if search_condition == None:
@@ -89,9 +80,9 @@ def gather_inputs():
             except ValueError:
                 print 'ERROR: Invalid input'
     
-    searchUsers(queryType,condition,comparison)
+    return searchUsers(queryType,condition,comparison)
 
 def main():
-    gather_inputs()
+    print gather_inputs()
 
 if __name__ == '__main__': main()
