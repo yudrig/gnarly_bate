@@ -33,8 +33,13 @@ def searchUsers(queryCategory,search_condition,operator):
     if search_condition == None:
         cur.execute(query)
     else:
+<<<<<<< HEAD
         cur.execute(query + ' %s',(search_condition,))
     users = cur.fetchall()
+=======
+        cur.execute(query + ' %s',(condition,))
+    users = cur.fetchall()#When this is changed to fetchone()you will only grab the first value which is the ID in which we need
+>>>>>>> ba52efd939a883c56c8925c15a88dba2b25a74b2
 
     return users
 
