@@ -69,7 +69,7 @@ def main():
         condition = raw_input("Condition: ")
         if queryType == 1 or queryType == 4:
             try:
-                condtiion = int(condition)
+                condition = int(condition)
             except ValueError:
                 print 'ERROR: Invalid input ' + query
                 return -1
