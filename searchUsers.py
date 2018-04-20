@@ -2,9 +2,17 @@
 
 import sys
 
-def searchUsers(queryType,condition,comparison):
+def searchUsers(queryCategory,search_condition,operator):
     import psycopg2
     import getpass
+    
+    print queryCategory
+    print search_condition
+    print operator
+
+    print type(queryCategory)
+    print type(search_condition)
+    print type(operator)
     
     #Connecting to database
     try:
@@ -16,35 +24,32 @@ def searchUsers(queryType,condition,comparison):
     #Dictionary of columns to parameterize queries
     #TODO: Make this a little more elegant
     column_dictionary = {1:'SELECT * FROM userlist WHERE ID ',2:'SELECT * FROM userlist WHERE firstname',3:'SELECT * FROM userlist WHERE lastname',4:'SELECT * FROM userlist WHERE score',5:'SELECT * FROM userlist WHERE email', 6:'SELECT * FROM userlist'}
-    #Dictionary of comparisons
-    comparison_dictionary = {1:'>', 2:'>=', 3:'=', 4:'<=', 5:'<', 6:'!='}
+    #Dictionary of operators
+    operator_dictionary = {1:'>', 2:'>=', 3:'=', 4:'<=', 5:'<', 6:'!='}
 
     #Building query from dictionary and parameters
-    if queryType == 6:
-        query = column_dictionary.get(queryType)
+    if queryCategory == 6:
+        query = column_dictionary.get(queryCategory)
     else:
         try:
-            query = column_dictionary.get(queryType) + comparison_dictionary.get(comparison)
+            query = column_dictionary.get(queryCategory) + operator_dictionary.get(operator)
         #If get() returns None, end in error. Putting this here simplifies error catching to one stage rather than the four that would be necessary if it were done preemptively
         except TypeError:
-		    return -1
+		    return -2
+        print query
 
     #Executing query
-    if condition == None:
+    if search_condition == None:
         cur.execute(query)
     else:
-        cur.execute(query + ' %s',(condition,))
+        cur.execute(query + ' %s',(search_condition,))
     users = cur.fetchall()
 
-    if(__name__ == '__main__'):
-        print users
-        return -1
-    else:
-        return users
+    return users
 
 #Main method if run alone
 #Gathers inputs manually
-def main():
+def gather_inputs():
     queryType = raw_input("""Select category:
 1 to search ID
 2 to search first name
@@ -66,9 +71,9 @@ def main():
         condition = raw_input("Condition: ")
         if queryType == 1 or queryType == 4:
             try:
-                condtiion = int(condition)
+                condition = int(condition)
             except ValueError:
-                print 'ERROR: Invalid input ' + query
+                print 'ERROR: Invalid input ' + condition
                 return -1
 
             comparison = raw_input("""Select comparison type:
@@ -83,7 +88,10 @@ def main():
                 comparison = int(comparison) 
             except ValueError:
                 print 'ERROR: Invalid input'
-
+    
     searchUsers(queryType,condition,comparison)
+
+def main():
+    gather_inputs()
 
 if __name__ == '__main__': main()
