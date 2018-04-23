@@ -10,16 +10,18 @@ def searchTemplates(queryType,condition):
     try:
         conn = psycopg2.connect("dbname = 'groupg' user = '%s'" % getpass.getuser())
     except:
-        return -1
+        return -2
     cur = conn.cursor()
 
     #Dictionary of columns to parameterize queries
     #TODO: Make this a little more elegant
-    column_dictionary = {1:'SELECT * FROM templates WHERE id',2:'SELECT * FROM templates WHERE subject',3:'SELECT * FROM templates WHERE body',4:'SELECT * FROM templates WHERE difficulty'}
+    column_dictionary = {1:'SELECT * FROM templates WHERE id',2:'SELECT * FROM templates WHERE subject',3:'SELECT * FROM templates WHERE body',4:'SELECT * FROM templates WHERE difficulty',5:'SELECT * FROM templates'}
 
     #Building query from dictionary and parameters
     try:
-        query = column_dictionary.get(queryType) + '='
+        query = column_dictionary.get(queryType)
+        if queryType is not 5:
+            query = query + '='
     #If get() returns None, end in error. Putting this here simplifies error catching to one stage rather than the four that would be necessary if it were done preemptively
     except TypeError:
         return -1
@@ -33,7 +35,6 @@ def searchTemplates(queryType,condition):
 
     return template
 
-#Main method if run alone
 #Gathers inputs manually
 def gather_inputs():
     queryType = raw_input("""Select category:
@@ -41,6 +42,7 @@ def gather_inputs():
 2 to search subject
 3 to search body
 4 to search difficulty
+5 to fetch all
 """)
     try:
         queryType = int(queryType)
@@ -48,7 +50,9 @@ def gather_inputs():
         print 'ERROR: Invalid input'
         return -1
     
-    condition = raw_input("Condition: ")
+    condition = None
+    if queryType is not 5:
+        condition = raw_input("Condition: ")
 
     return searchTemplates(queryType,condition)
 

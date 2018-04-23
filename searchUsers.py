@@ -47,7 +47,7 @@ def gather_inputs():
 3 to search last name
 4 to search score
 5 to search email address
-6 to send without category 
+6 to search without category 
 """)
     try:
         queryType = int(queryType)
