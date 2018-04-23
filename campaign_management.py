@@ -10,7 +10,7 @@ def campaign_management():
     1) Create campaign
     2) View current campaigns
     3) End a campaign prematurely
-    4) Nevermind
+    4) Cancel
     """)
 
         if selection == '1':
@@ -20,9 +20,8 @@ def campaign_management():
         elif selection == '3':
             end_campaign()
         elif selection == '4':
-            import GEMBAM
             print "Oh okay"
-            GEMBAM.welcome_message()
+            return 0
         else:
             print "Invalid input. Please try again"
             sure = False
@@ -34,13 +33,16 @@ def view_campaigns():
     try:
         conn = psycopg2.connect("dbname = 'groupg' user = '%s'" % getpass.getuser())
     except:
+        print 'Error: Unable to connect to database'
         return -1
     cur = conn.cursor()
 
-    campaigns = cur.execute('SELECT * FROM tracking_campaigns;')
-
+    cur.execute('SELECT * FROM tracking_campaigns;')
+    campaigns = cur.fetchall()
+    
+    print 'Name\tStarted\tEnding'
     for campaign in campaigns:
-        print campaign
+        print '%s\t%s\t%s' % (campaign[0],campaign[1],campaign[2])
 
     #TODO: analyticy stuff should probably go here
 
@@ -127,4 +129,20 @@ def create_campaign():
             print 'Invalid input. Please try again.'
             sure = False
 
-    campaign_temp_table.table_creation(campaign_name,users,template)
+    sure = False
+    while not sure:
+        end = raw_input('How many hours would you like this campaign to last?\n')
+        try:
+            int(end)
+            sure = True
+        except ValueError:
+            print 'Invalid input. Please try again.'
+            sure = False
+        
+    try:
+        campaign_temp_table.table_creation(campaign_name,users,template,end)
+    except:
+        print 'An error has occured'
+        return -1
+
+    print 'Table successfully created!'

@@ -4,7 +4,7 @@
 #Takes the name of the campaign, the campaign end date
 import sys
 
-def table_creation(campaign_name,users,template):
+def table_creation(campaign_name,users,template,end):
     import psycopg2
     import getpass
     try:
@@ -32,7 +32,7 @@ CREATE TABLE campaign_%s (
 ;
 """ % (campaign_name,user[0],template)
 
-	command = command + 'INSERT INTO tracking_campaigns(name) VALUES (%s);' % campaign_name
+    command = command + 'INSERT INTO tracking_campaigns(name,close) VALUES (\'%s\', current_timestamp + interval \'%s hour\');' % (campaign_name,end)
 
     command = command + 'COMMIT;'
     
