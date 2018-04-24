@@ -1,4 +1,6 @@
 #!/usr/bin/python2
+from os import path
+import os
 import sys
 from PIL import Image
 
@@ -12,15 +14,15 @@ def imageCreation(EmailID, userID=[]):
 #       print(userID)
 #       i=0
 #       while (i < len(userID)):
-
+        os.path.abspath('/home/thomasrhatigan/public_html/pixel.png')
         for user in userID :
 
-                im1 = Image.open("pixel.png")
+                im1 = Image.open("/home/thomasrhatigan/public_html/pixel.png")
                 # print(im1.format, im1.size,im1.mode)
         #create copy of the orignal image
                 im2 = im1.copy()
         #Call the UserID and EmailID to apply the UserID and EmailID for the image name
-                Identification ="""pix_%s_%s.png"""%(EmailID, user[0])
+                Identification ="""/home/thomasrhatigan/public_html/pix_%s_%s.png"""%(EmailID, user[0])
                 im2.save(Identification,format="png")
         #print for for the confirm that it has been created
                 #print(im2.format, im2.size, im2.mode)
