@@ -50,6 +50,8 @@ def create_campaign():
     import searchUsers
     import searchTemplates
     import campaign_temp_table
+    import imageCreation
+
     campaign_name = raw_input("Campaign name: ")
     sure = False
     users = list()
@@ -139,10 +141,9 @@ def create_campaign():
             print 'Invalid input. Please try again.'
             sure = False
         
-    try:
-        campaign_temp_table.table_creation(campaign_name,users,template,end)
-    except:
-        print 'An error has occured'
-        return -1
+	campaign_temp_table.table_creation(campaign_name,users,template,end)
 
-    print 'Table successfully created!'
+    #TODO: Currently only works in specific circumstances, read module for details. Fix later.
+    #imageCreation.imageCreation(template,users)
+
+    print 'Campaign successfully created!'
