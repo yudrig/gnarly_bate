@@ -11,10 +11,10 @@ if pix is not None:
 	for p in pix:
 		mail = p[0]
 		user = p[1]
-		campaign_temp_table.table_updating(mail,user,"opened")
+		table_updating.table_updating(mail,user,"opened")
 if url is not None:
 	for u in url:
 		mail = u[0]
 		user = u[1]
-		campaign_temp_table.table_updating(mail,user,"failed")
+		table_updating.table_updating(mail,user,"failed")
 
