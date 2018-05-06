@@ -18,7 +18,7 @@ Subject: %s
 
     try:
         #TODO: Send mail from arbitrary server
-        smtpObj = smtplib.SMTP('localhost')
+        smtpObj = smtplib.SMTP('clavin.adelphi.edu')
         smtpObj.sendmail(getpass.getuser()+'@compsci.adelphi.edu',receiverAddress,message)
         return 1
     except smtplib.SMTPException:
