@@ -63,11 +63,11 @@ def table_updating(campaignID,userIDs,incident):
         print "Unable to connect to DB!"
         return -1
     cur = conn.cursor() 
-    cur.execute("select * from information_schema.tables where table_name=%s", ("campaign_"+campaignID,))
+    cur.execute("select * from information_schema.tables where table_name=%s", ("campaign_"+str(campaignID),))
     if cur.rowcount:    
        cur.execute("""BEGIN TRANSACTION;
        UPDATE %s SET %s = TRUE, date_%s = current_timestamp WHERE userID = %s;
-       COMMIT;""" % ( "campaign_"+campaignID , incident , incident , user))
+       COMMIT;""" % ( "campaign_"+str(campaignID) , incident , incident , user))
 
 
 def end_campaign(campaignID):
