@@ -71,19 +71,12 @@ def table_updating(campaignID,userIDs,incident):
 
 
 def end_campaign(campaignID):
+    import CronParse.runCamp
+
     cur = psql_connect()
 
-    cur.execute('SELECT name FROM tracking_campaigns WHERE id = %s',(campaignID,))
-    campaignName = cur.fetchone()
-
-    cur.execute('SELECT userID FROM campaign_%s',(campaignID,))
+    cur.execute('SELECT userid,opened,failed FROM campaign_%s;',(campaignID,))
     users = cur.fetchall()
-    
-    #Final log checks before close
-    table_updating(campaignID,users,'opened')
-    table_updating(campaignID,users,'failed')
-    
-    cur.execute('SELECT userid,opened,failed FROM campaign_%s;',(campaignName))
 
     for user in users:
         if user[1]:
@@ -96,6 +89,6 @@ def end_campaign(campaignID):
     ALTER TABLE campaign_%s RENAME TO archived_%s;
     
     COMMIT;
-    """,(campaignID,campaignName,campaignName))
+    """,(campaignID,campaignID,campaignID))
 
     return 1 
