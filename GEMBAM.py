@@ -55,9 +55,9 @@ def email_info():
 2) Add email fragments
 3) Modify whole emails
 4) Modify fragments
-4) Remove whole emails
-5) Remove fragments
-6) Nevermind
+5) Remove whole emails
+6) Remove fragments
+7) Nevermind
 """)
     
     if selection == '1':
@@ -72,6 +72,9 @@ def email_info():
         remove_whole()
     elif selection == '6':
         remove_fragment()
+    elif selection == '7':
+        print 'Oh, alright'
+        welcome_message()
     else:
         print 'Invalid input. Please try again.'
         email_info()
