@@ -7,18 +7,18 @@ def campaign_management():
     while(not sure):
         sure = True
         selection = raw_input("""What would you like to do?
-    1) Create campaign
-    2) View current campaigns
-    3) End a campaign prematurely
-    4) Cancel
-    """)
+1) Create campaign
+2) View current campaigns
+3) End a campaign prematurely
+4) Cancel
+""")
 
         if selection == '1':
             create_campaign() 
-        elif selection == '1':
+        elif selection == '2':
             view_campaigns()
         elif selection == '3':
-            end_campaign()
+            manual_campaign_end()
         elif selection == '4':
             print "Oh okay"
             return 0
@@ -37,14 +37,18 @@ def view_campaigns():
         return -1
     cur = conn.cursor()
 
-    cur.execute('SELECT * FROM tracking_campaigns;')
+    cur.execute('SELECT * FROM tracking_campaigns WHERE active = \'t\';')
     campaigns = cur.fetchall()
     
-    print 'Name\tStarted\tEnding'
+    IDs = list()
+    print 'Name\tID\tStarted\tEnding'
     for campaign in campaigns:
-        print '%s\t%s\t%s' % (campaign[0],campaign[1],campaign[2])
+        print '%s\t%s\t%s\t%s' % (campaign[4],campaign[0],campaign[2],campaign[3])
+        IDs.append(campaign[0])
 
     #TODO: analyticy stuff should probably go here
+
+    return IDs
 
 def create_campaign():
     import searchUsers
@@ -147,3 +151,16 @@ def create_campaign():
     #imageCreation.imageCreation(template,users)
 
     print 'Campaign successfully created!'
+
+def manual_campaign_end():
+    IDs = view_campaigns()
+    sure = False
+    while not sure:
+        selection = raw_input('What is the ID of the campaign you would like to end?')
+        if selection not in IDs:
+            print 'That is not an active campaign. Please try again.'
+            sure = False
+        else:
+            sure = True
+    campaign_temp_table.end_campaign(selection)
+    print 'Campaign ended successfully!'
