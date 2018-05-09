@@ -34,7 +34,7 @@ def user_info():
 5) Nevermind
 """)
 
-    if selction == '1':
+    if selection == '1':
         add_user()
     elif selection == '2':
         update_user()
@@ -76,32 +76,37 @@ def email_info():
         print 'Invalid input. Please try again.'
         email_info()
 
-def analyze_results():
-    print 'Not yet implemented'
+def first_time_setup():
+    import setup
+    established = setup.configure()
+    if(established == 1):
+        print 'System properly configured!'
+    elif(established == 2):
+        print 'An error has occurred. The database is improperly configured.'
+    else:
+        print 'An unknown error has occurred'
+
     welcome_message()
 
 def welcome_message():
     selection = raw_input("""Welcome to GEMBAM, the Gnarly Employee Bateing Application Manager! 
-1) Send emails
-2) Manage email campaigns
-3) Manage user information
-4) Manage email information
-5) Analyze results
-6) None
+1) Manage email campaigns
+2) Manage user information
+3) Manage email information
+4) First time setup
+5) None
 Please enter your selection:
 """)
 
     if selection == '1':
-        send_email()
-    elif selection == '2':
         email_campaign()
-    elif selection == '3':
+    elif selection == '2':
         user_info()
-    elif selection == '4':
+    elif selection == '3':
         email_info()
+    elif selection == '4':
+        first_time_setup()
     elif selection == '5':
-        analyze_results()
-    elif selection == '6':
         print 'Goodbye!'
         return 0
     else:
