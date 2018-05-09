@@ -1,0 +1,355 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.12
+-- Dumped by pg_dump version 9.5.12
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: groupg; Type: DATABASE; Schema: -; Owner: -
+--
+
+CREATE DATABASE groupg WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8';
+
+
+\connect groupg
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: incoming; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.incoming (
+    person integer NOT NULL,
+    template integer NOT NULL,
+    "time" timestamp without time zone,
+    opened boolean,
+    clicked boolean
+);
+
+
+--
+-- Name: outcomes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.outcomes (
+    person integer NOT NULL,
+    template integer NOT NULL,
+    opened integer,
+    failed integer
+);
+
+
+--
+-- Name: templates; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.templates (
+    id integer NOT NULL,
+    subject text,
+    body text,
+    difficulty integer
+);
+
+
+--
+-- Name: templates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.templates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: templates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.templates_id_seq OWNED BY public.templates.id;
+
+
+--
+-- Name: tracking_campaigns; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tracking_campaigns (
+    id integer NOT NULL,
+    email integer,
+    open timestamp without time zone DEFAULT now(),
+    close timestamp without time zone,
+    name text,
+    active boolean DEFAULT true
+);
+
+
+--
+-- Name: tracking_campaigns_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tracking_campaigns_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tracking_campaigns_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tracking_campaigns_id_seq OWNED BY public.tracking_campaigns.id;
+
+
+--
+-- Name: userlist; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.userlist (
+    id integer NOT NULL,
+    firstname text,
+    lastname text,
+    score integer,
+    email text
+);
+
+
+--
+-- Name: userlist_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.userlist_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: userlist_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.userlist_id_seq OWNED BY public.userlist.id;
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.templates ALTER COLUMN id SET DEFAULT nextval('public.templates_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tracking_campaigns ALTER COLUMN id SET DEFAULT nextval('public.tracking_campaigns_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.userlist ALTER COLUMN id SET DEFAULT nextval('public.userlist_id_seq'::regclass);
+
+
+--
+-- Name: incoming_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.incoming
+    ADD CONSTRAINT incoming_pkey PRIMARY KEY (person, template);
+
+
+--
+-- Name: outcomes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.outcomes
+    ADD CONSTRAINT outcomes_pkey PRIMARY KEY (person, template);
+
+
+--
+-- Name: templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.templates
+    ADD CONSTRAINT templates_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tracking_campaigns_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tracking_campaigns
+    ADD CONSTRAINT tracking_campaigns_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: userlist_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.userlist
+    ADD CONSTRAINT userlist_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: incoming_person_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.incoming
+    ADD CONSTRAINT incoming_person_fkey FOREIGN KEY (person) REFERENCES public.userlist(id);
+
+
+--
+-- Name: incoming_template_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.incoming
+    ADD CONSTRAINT incoming_template_fkey FOREIGN KEY (template) REFERENCES public.templates(id);
+
+
+--
+-- Name: outcomes_person_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.outcomes
+    ADD CONSTRAINT outcomes_person_fkey FOREIGN KEY (person) REFERENCES public.userlist(id);
+
+
+--
+-- Name: outcomes_template_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.outcomes
+    ADD CONSTRAINT outcomes_template_fkey FOREIGN KEY (template) REFERENCES public.templates(id);
+
+
+--
+-- Name: tracking_campaigns_email_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tracking_campaigns
+    ADD CONSTRAINT tracking_campaigns_email_fkey FOREIGN KEY (email) REFERENCES public.templates(id);
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: -
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- Name: TABLE incoming; Type: ACL; Schema: public; Owner: -
+--
+
+REVOKE ALL ON TABLE public.incoming FROM PUBLIC;
+REVOKE ALL ON TABLE public.incoming FROM kevinwoll;
+GRANT ALL ON TABLE public.incoming TO kevinwoll;
+GRANT ALL ON TABLE public.incoming TO jasonmassimino;
+GRANT ALL ON TABLE public.incoming TO thomasrhatigan;
+GRANT ALL ON TABLE public.incoming TO "www-data";
+
+
+--
+-- Name: TABLE outcomes; Type: ACL; Schema: public; Owner: -
+--
+
+REVOKE ALL ON TABLE public.outcomes FROM PUBLIC;
+REVOKE ALL ON TABLE public.outcomes FROM kevinwoll;
+GRANT ALL ON TABLE public.outcomes TO kevinwoll;
+GRANT ALL ON TABLE public.outcomes TO jasonmassimino;
+GRANT ALL ON TABLE public.outcomes TO thomasrhatigan;
+GRANT ALL ON TABLE public.outcomes TO "www-data";
+
+
+--
+-- Name: TABLE templates; Type: ACL; Schema: public; Owner: -
+--
+
+REVOKE ALL ON TABLE public.templates FROM PUBLIC;
+REVOKE ALL ON TABLE public.templates FROM kevinwoll;
+GRANT ALL ON TABLE public.templates TO kevinwoll;
+GRANT ALL ON TABLE public.templates TO jasonmassimino;
+GRANT ALL ON TABLE public.templates TO thomasrhatigan;
+GRANT ALL ON TABLE public.templates TO "www-data";
+
+
+--
+-- Name: TABLE tracking_campaigns; Type: ACL; Schema: public; Owner: -
+--
+
+REVOKE ALL ON TABLE public.tracking_campaigns FROM PUBLIC;
+REVOKE ALL ON TABLE public.tracking_campaigns FROM kevinwoll;
+GRANT ALL ON TABLE public.tracking_campaigns TO kevinwoll;
+GRANT SELECT ON TABLE public.tracking_campaigns TO PUBLIC;
+
+
+--
+-- Name: TABLE userlist; Type: ACL; Schema: public; Owner: -
+--
+
+REVOKE ALL ON TABLE public.userlist FROM PUBLIC;
+REVOKE ALL ON TABLE public.userlist FROM kevinwoll;
+GRANT ALL ON TABLE public.userlist TO kevinwoll;
+GRANT ALL ON TABLE public.userlist TO jasonmassimino;
+GRANT ALL ON TABLE public.userlist TO thomasrhatigan;
+GRANT ALL ON TABLE public.userlist TO "www-data";
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: public; Owner: -
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE kevinwoll IN SCHEMA public REVOKE ALL ON TABLES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE kevinwoll IN SCHEMA public REVOKE ALL ON TABLES  FROM kevinwoll;
+ALTER DEFAULT PRIVILEGES FOR ROLE kevinwoll IN SCHEMA public GRANT SELECT ON TABLES  TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
