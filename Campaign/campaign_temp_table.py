@@ -21,7 +21,16 @@ def table_creation(campaign_name,users,template,end):
         print "Unable to connect to DB!"
         return -1
     cur = conn.cursor()
+
+    tracking_command = 'INSERT INTO tracking_campaigns(name,close,email) VALUES (\'%s\', current_timestamp + interval \'%s hour\',%s);' % (campaign_name,end,template)
     
+    cur.execute(tracking_command)
+
+    tracking_command = 'SELECT id FROM tracking_campaigns WHERE name = \'%s\';' % (campaign_name)
+
+    cur.execute(tracking_command)
+    campaign_id = cur.fetchall()
+
     command = """BEGIN TRANSACTION;
 CREATE TABLE campaign_%s (
      userID int REFERENCES userList(id),
@@ -31,15 +40,13 @@ CREATE TABLE campaign_%s (
      date_opened timestamp without time zone default null,
      date_failed timestamp without time zone default null
 );
-""" % (campaign_name)
+""" % (campaign_id[0][0])
 
     for user in users:
         command = command + """INSERT INTO campaign_%s(userID) VALUES
     (%s)
 ;
-""" % (campaign_name,user[0])
-
-    command = command + 'INSERT INTO tracking_campaigns(name,close,email) VALUES (\'%s\', current_timestamp + interval \'%s hour\',%s);' % (campaign_name,end,template)
+""" % (campaign_id[0][0],user[0])
 
     command = command + 'COMMIT;'
     
@@ -65,16 +72,16 @@ def table_updating(campaignID,userIDs,incident):
 
 def end_campaign(campaignID):
     cur = psql_connect()
-    
-    #Final log checks before close
-    table_updating(campaignID,users,'opened')
-    table_updating(campaignID,users,'failed')
 
     cur.execute('SELECT name FROM tracking_campaigns WHERE id = %s',(campaignID,))
     campaignName = cur.fetchone()
 
     cur.execute('SELECT userID FROM campaign_%s',(campaignID,))
     users = cur.fetchall()
+    
+    #Final log checks before close
+    table_updating(campaignID,users,'opened')
+    table_updating(campaignID,users,'failed')
     
     cur.execute('SELECT userid,opened,failed FROM campaign_%s;',(campaignName))
 

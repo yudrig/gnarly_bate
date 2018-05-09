@@ -51,16 +51,16 @@ def view_campaigns():
     return IDs
 
 def create_campaign():
-    import searchUsers
-    import searchTemplates
-    import campaign_temp_table
-    import imageCreation
+    import Sending.searchUsers
+    import Sending.searchTemplates
+    import Campaign.campaign_temp_table
+    import Campaign.imageCreation
 
     campaign_name = raw_input("Campaign name: ")
     sure = False
     users = list()
     while(not sure):
-        buffer_users = searchUsers.gather_inputs()        
+        buffer_users = Sending.searchUsers.gather_inputs()        
         for buffer_user in buffer_users:
             #Check for duplicates at this stage
             add = True
@@ -112,7 +112,7 @@ def create_campaign():
         elif t_selection == '3':
             sure = True
             #List all templates and allow selection of one by ID
-            all_templates = searchTemplates.searchTemplates(5,None)
+            all_templates = Sending.searchTemplates.searchTemplates(5,None)
             print 'Templates available:'
             ids = list()
             print 'ID\tSubject\tBody\tDifficulty'
@@ -145,10 +145,10 @@ def create_campaign():
             print 'Invalid input. Please try again.'
             sure = False
         
-	campaign_temp_table.table_creation(campaign_name,users,template,end)
+	Campaign.campaign_temp_table.table_creation(campaign_name,users,template,end)
 
     #TODO: Currently only works in specific circumstances, read module for details. Fix later.
-    #imageCreation.imageCreation(template,users)
+    #Campaign.imageCreation.imageCreation(template,users)
 
     print 'Campaign successfully created!'
 
@@ -162,5 +162,5 @@ def manual_campaign_end():
             sure = False
         else:
             sure = True
-    campaign_temp_table.end_campaign(selection)
+    Campaign.campaign_temp_table.end_campaign(selection)
     print 'Campaign ended successfully!'
