@@ -9,7 +9,7 @@ def sendViaDatabase(queryType,condition,comparison,senderName,senderAddress,subj
     
     #Connecting to database
     try:
-        conn = psycopg2.connect("dbname = 'groupg' user = '%s'" % getpass.getuser()")
+        conn = psycopg2.connect("dbname = 'groupg' user = '%s'" % getpass.getuser())
     except:
         #Only print error if run as main, alway return -1 on failure
         if __name__ == '__main__': print "Unable to connect to DB!"
