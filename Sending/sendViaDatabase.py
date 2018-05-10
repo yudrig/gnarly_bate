@@ -5,10 +5,11 @@ import sys
 def sendViaDatabase(queryType,condition,comparison,senderName,senderAddress,subject,message):
     import psycopg2
     import sendMail
+    import getpass
     
     #Connecting to database
     try:
-        conn = psycopg2.connect("dbname = 'groupg' user = 'kevinwoll'")
+        conn = psycopg2.connect("dbname = 'groupg' user = '%s'" % getpass.getuser()")
     except:
         #Only print error if run as main, alway return -1 on failure
         if __name__ == '__main__': print "Unable to connect to DB!"
