@@ -25,6 +25,30 @@ def email_campaign():
     import Campaign.campaign_management
     Campaign.campaign_management.campaign_management()
 
+def add_user():
+    import psycopg2
+    import getpass
+    
+    first_name = raw_input('What is the first name of the user you would like to add?')
+    last_name = raw_input('What is the last name of the user you would like to add?')
+    email = raw_input('What is the email address of the user you would like to add?')
+
+    try:
+        conn = psycopg2.connect("dbname = 'groupg' user = '%s'" % getpass.getuser())
+    except:
+        print 'Unable to connect to the DB!'
+        return -1
+    cur = conn.cursor()
+
+    cur.execute("INSERT INTO userlist(firstname,lastname,email) VALUES (%s,%s,%s);",(first_name,last_name,email))
+    print "User added!"
+    welcome_message()
+
+def add_email():
+    #TODO: Make work
+    import psycopg2
+    import getpass
+
 def user_info():
     selection = raw_input("""Would you like to:
 1) Add a new user
@@ -34,7 +58,7 @@ def user_info():
 5) Nevermind
 """)
 
-    if selection == '1':
+    if selction == '1':
         add_user()
     elif selection == '2':
         update_user()
@@ -55,9 +79,9 @@ def email_info():
 2) Add email fragments
 3) Modify whole emails
 4) Modify fragments
-5) Remove whole emails
-6) Remove fragments
-7) Nevermind
+4) Remove whole emails
+5) Remove fragments
+6) Nevermind
 """)
     
     if selection == '1':
@@ -72,44 +96,36 @@ def email_info():
         remove_whole()
     elif selection == '6':
         remove_fragment()
-    elif selection == '7':
-        print 'Oh, alright'
-        welcome_message()
     else:
         print 'Invalid input. Please try again.'
         email_info()
 
-def first_time_setup():
-    import setup
-    established = setup.configure()
-    if(established == 1):
-        print 'System properly configured!'
-    elif(established == 2):
-        print 'An error has occurred. The database is improperly configured.'
-    else:
-        print 'An unknown error has occurred'
-
+def analyze_results():
+    print 'Not yet implemented'
     welcome_message()
 
 def welcome_message():
     selection = raw_input("""Welcome to GEMBAM, the Gnarly Employee Bateing Application Manager! 
-1) Manage email campaigns
-2) Manage user information
-3) Manage email information
-4) First time setup
-5) None
+1) Send emails
+2) Manage email campaigns
+3) Manage user information
+4) Manage email information
+5) Analyze results
+6) None
 Please enter your selection:
 """)
 
     if selection == '1':
-        email_campaign()
+        send_email()
     elif selection == '2':
-        user_info()
+        email_campaign()
     elif selection == '3':
-        email_info()
+        user_info()
     elif selection == '4':
-        first_time_setup()
+        email_info()
     elif selection == '5':
+        analyze_results()
+    elif selection == '6':
         print 'Goodbye!'
         return 0
     else:
