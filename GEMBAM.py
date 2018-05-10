@@ -48,6 +48,53 @@ def add_email():
     #TODO: Make work
     import psycopg2
     import getpass
+    import Generation.testGenerate
+
+    selection = raw_input("""Add Email by:
+1: Random Generation
+2: Manual Input
+3: Nevermind
+""")
+
+    try:
+        conn = psycopg2.connect("dbname = 'groupg' user = '%s'" % getpass.getuser())
+    except:
+        print 'Unable to connect to the DB!'
+        return -1
+    cur = conn.cursor()
+    file = open("Generation/txt/Suffix.txt")
+    fileLines = file.read().splitlines()
+    
+    if selection == '1':
+        choices = "1) Random\n"
+        i=0
+        for line in fileLines:
+            if (i > 0):
+                choices += str(i+1) + ") " + line[1:] + "\n"
+	    i+=1
+
+        selection2 = int(raw_input(choices));
+	
+        if selection2 < i or selection2 > 0:
+           suffix = fileLines[selection2-1][1:]
+        else:
+            suffix = ""
+        hold = Generation.testGenerate.genEmail("[NAME]",suffix)
+        subject = hold[0]
+        body = hold [1]
+    elif selection == '2':
+        subject = raw_input("Subject:")
+        body = raw_input("Body:")
+    elif selection == '3':
+        welcome_message()
+    else:
+        print "Try Again"
+        add_email()
+
+    print subject
+    print body
+    cur.execute("INSERT INTO templates(subject,body,difficulty) VALUES (%s,%s,%s);",(subject,body,"3"))
+
 
 def user_info():
     selection = raw_input("""Would you like to:
@@ -85,7 +132,7 @@ def email_info():
 """)
     
     if selection == '1':
-        add_whole()
+        add_email()
     elif selection == '2':
         add_fragment()
     elif selection == '3':
