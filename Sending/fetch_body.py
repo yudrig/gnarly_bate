@@ -4,7 +4,7 @@ def fetch_email_body(queryType, query):
         import psycopg2
         
         try:
-                conn = psycopg2.connect("dbname = 'groupg' user = 'thomasrhatigan'")
+                conn = psycopg2.connect("dbname = 'groupg' user = '%s'" % getpass.getuser())
         except:
                 print "Unable to connect!"
                 return 0
